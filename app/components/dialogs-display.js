@@ -4,8 +4,6 @@ export default Component.extend({
   playerName: 'Player One',
   numGuess: 0,
   playerGuess: 0,
-  numPlayerGuess: 0,
-  maxPlayerGuess: 3,
   init(){
     this._super(...arguments);
     this.introduction(this)
